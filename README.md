@@ -3,6 +3,11 @@
 Flask project gets data from a MySQL database into an HTML file with Bootstrap.
 This application was made on PyCharm and on a Xubuntu VM hosted on Microsoft Windows server running in IIS.
 
+###### Requirements
+- Linux Ubuntu (or Xubuntu, Debian or any realted UNIX distro)
+- Python 3
+- PIP (Python package manager)
+
 ## How to set up Flask 
 
 Verify Python 3 installation
@@ -95,7 +100,13 @@ Once you are done with your work, deactivate the environment by typing deactivat
 ```
 
 ```NOTE: flask needs to be runnning always for the app to work```
+
 ```NOTE 2: it is important to keep every file on the respective folder in order for the app to run correctly```
+
+## To Run This App
+
+Download the code as .ZIP, SSH or any other method and save it on the directory where Flask is installed. Then open PyCharm and open the whole project (Should be all in one folder) and run the app.py file on your IDE (or compiler). The program should run locally.
+
 
 
 
