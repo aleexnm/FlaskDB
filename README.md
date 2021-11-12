@@ -95,5 +95,7 @@ Once you are done with your work, deactivate the environment by typing deactivat
 ```
 
 ```NOTE: flask needs to be runnning always for the app to work```
+```NOTE 2: it is important to keep every file on the respective folder in order for the app to run correctly```
+
 
 
