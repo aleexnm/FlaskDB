@@ -105,7 +105,7 @@ Once you are done with your work, deactivate the environment by typing deactivat
 
 ## To Run This App
 
-Download the code as .ZIP, SSH or any other method and save it on the directory where Flask is installed. Then open PyCharm and open the whole project (Should be all in one folder) and run the app.py file on your IDE (or compiler). The program should run locally.
+Download the code as .ZIP, SSH or any other method and save it on the directory where Flask is installed. Then open PyCharm (or preferred IDE) and open the whole project (Should be all in one folder) and run the app.py file on your IDE (or compiler). The program should run locally.
 
 
 
