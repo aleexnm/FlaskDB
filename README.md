@@ -1,6 +1,7 @@
 # FlaskDB
 
 Flask project gets data from a MySQL database into an HTML file with Bootstrap.
+This application was made on PyCharm and on a Xubuntu VM hosted on Microsoft Windows server running in IIS.
 
 ## How to set up Flask 
 
