@@ -4,7 +4,7 @@ Flask project gets data from a MySQL database into an HTML file with Bootstrap.
 This application was made on PyCharm and on a Xubuntu VM hosted on Microsoft Windows server running in IIS.
 
 ###### Requirements
-- Linux Ubuntu (or Xubuntu, Debian or any realted UNIX distro)
+- Linux Ubuntu (or Xubuntu, Debian or any related UNIX distro)
 - Python 3
 - PIP (Python package manager)
 
