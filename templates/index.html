@@ -52,7 +52,11 @@
                <form action="/subs" method="post">
                    <label for="facility" class="fw-bold" style="padding-bottom: 15px;">Select Facility</label>
                     <select name="facility" id="facility" class="form-select" aria-label="Default select example">
-                        <option value="West">EPPC West</option>
+
+                        {% for facility in facility_list %}
+                            <option value="{{ facility.ShortName }}">{{ facility.ShortName }}</option>
+                        {% endfor %}
+               <!--         <option value="West">EPPC West</option>
                         <option value="East">EPPC East</option>
                        <option value="Central">EPPC Central</option>
                        <option value="Northeast">EPPC Northeast</option>
@@ -66,7 +70,7 @@
                        <option value="Las Cruces - Northrise">LCPC Northrise</option>
                        <option value="Frisco">NTPC Frisco</option>
                         <option value="Mid Cities">NTPC Midcities</option>
-
+                !-->
                       </select>
 
                     <br>

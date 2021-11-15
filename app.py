@@ -11,7 +11,8 @@ def hello_world(name=None):
     db.get_conn()
     db.get_cursor()
     db_data = db.get_all_data()
-    return render_template('index.html', alex=db_data)
+    facility_list = db.get_facility_list()
+    return render_template('index.html', alex=db_data, facility_list=facility_list)
 
 
 @app.route('/product/<id>')

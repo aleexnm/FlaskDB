@@ -42,3 +42,7 @@ class DB:
     def get_all_clinics(self, facility):
         self.__cursor.execute("SELECT * FROM InventoryOutOfStockDates WHERE Facility = %s LIMIT 1", facility)
         return self.__cursor.fetchall()
+
+    def get_facility_list(self):
+        self.__cursor.execute("SELECT ShortName, FacilityName FROM kvFacility WHERE status = 'Active' ORDER BY FacilityName")
+        return self.__cursor.fetchall()
