@@ -36,7 +36,10 @@ class DB:
         return self.__cursor.fetchall()
 
     def get_all_note(self, facility):
-        self.__cursor.execute("SELECT * FROM CustomScheduleAll INNER JOIN kvVisitStatusCode ON kvVisitStatusCode.VisitStatus = CustomScheduleAll.VisitCode WHERE kvVisitStatusCode.ManagerPendingInclude Is True AND Facility= %s", facility)
+        self.__cursor.execute(("SELECT * FROM CustomScheduleAll INNER JOIN kvVisitStatusCode "
+                               "ON kvVisitStatusCode.VisitStatus = CustomScheduleAll.VisitCode "
+                               "WHERE CustomScheduleAll.MRN NOT LIKE ('TestP%%') AND "
+                               "kvVisitStatusCode.ManagerPendingInclude Is True AND Facility= %s"), facility)
         return self.__cursor.fetchall()
 
     def get_all_clinics(self, facility):
