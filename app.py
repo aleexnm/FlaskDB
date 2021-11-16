@@ -3,8 +3,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from config import Config
 from forms import CsQueryForm
 from db import *
+import pandas as pd
 import io
 import csv
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -97,27 +99,37 @@ def csquery():
         try:
             cs_data = db.get_cs_data(form.start_date, form.end_date, form.visit_type.data)
 
-            output = io.StringIO()
-            writer = csv.writer(output)
+            df_output = pd.DataFrame(cs_data, columns=['EncounterID', 'VisitType', 'VisitCode', 'ApptDate', 'ApptTime', 'MRN', 'PtName', 'PtDOB', 'PrimIns', 'PrimInsNo', 'SecIns', 'SecInsNo', 'ApptProvider', 'Facility'])
+            df_output['ApptTime'] = df_output['ApptTime'] + pd.Timestamp(0)
 
-            line = ['EncounterID, VisitType, VisitCode, ApptDate, ApptTime, MRN, PtName, PtDOB, PrimIns, PrimInsNo, SecIns, SecInsNo, ApptProvider, Facility']
-            writer.writerow(line)
+            excel_file = io.BytesIO()
 
-            for row in cs_data:
-                line = [row['EncounterID']+','+row['VisitType']+','+row['VisitCode']+','+str(row['ApptDate'])+','+str(row['ApptTime'])+','+row['MRN']+','+row['PtName']+','+str(row['PtDOB'])+','+row['PrimIns']+','+row['PrimInsNo']+','+row['SecIns']+','+row['SecInsNo']+','+row['ApptProvider']+','+row['Facility']]
-                writer.writerow(line)
+            options = {}
+            options['strings_to_formulas'] = False
+            options['strings_to_urls'] = False
+            xlwriter = pd.ExcelWriter(excel_file, engine='xlsxwriter',options=options, date_format='mm/dd/yyyy', datetime_format='hh:mm AM/PM')
 
-            output.seek(0)
+            df_output.to_excel(xlwriter, sheet_name='Sheet1', index=False, na_rep='NaN')
 
-            return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=custom_schedule.csv"})
+            for column in df_output:
+                column_width = max(df_output[column].astype(str).map(len).max(), len(column))
+                col_idx = df_output.columns.get_loc(column)
+                xlwriter.sheets['Sheet1'].set_column(col_idx, col_idx, column_width)
+
+
+            xlwriter.save()
+            xlwriter.close()
+
+            excel_file.seek (0)
+            response = Response(excel_file.read(), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',headers={"Content-Disposition":"attachment;filename=custom_schedule.xlsx"})
+
+            return response
         except Exception as e:
             print(e)
 
         return redirect('/csquery')
 
     return render_template('CsQuery.html', title="CS Query", form=form)
-
-
 
 
 # TEST DICTIONARY
