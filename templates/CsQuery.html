@@ -1,0 +1,17 @@
+<h1>Custom Schedule Query</h1>
+<form action="" method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.start_date.label }}<br>
+        {{ form.start_date(size=32) }}
+    </p>
+    <p>
+        {{ form.end_date.label }}<br>
+        {{ form.end_date(size=32) }}
+    </p>
+    <p>
+        {{ form.visit_type.label }}<br>
+        {{ form.visit_type }}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>

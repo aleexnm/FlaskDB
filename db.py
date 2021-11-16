@@ -1,7 +1,7 @@
 # python mysql db
 
 import pymysql
-
+import datetime
 
 class DB:
     __conn: pymysql
@@ -48,4 +48,14 @@ class DB:
 
     def get_facility_list(self):
         self.__cursor.execute("SELECT ShortName, FacilityName FROM kvFacility WHERE status = 'Active' ORDER BY FacilityName")
+        return self.__cursor.fetchall()
+
+    def get_visit_types(self) -> object:
+        self.__cursor.execute("SELECT id, VisitTypeCode FROM kvVisitTypeCode WHERE Status='Active' ORDER BY VisitTypeCode")
+        return self.__cursor.fetchall()
+
+    def get_cs_data(self, start_date, end_date, visit_type):
+        parameter_tuple = (start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), visit_type)
+        self.__cursor.execute(("SELECT * FROM CustomScheduleAll WHERE ApptDate >= %s AND ApptDate <= %s AND "
+                              "VisitType = %s"), parameter_tuple)
         return self.__cursor.fetchall()

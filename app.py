@@ -1,9 +1,13 @@
 # create flask app
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response
+from config import Config
+from forms import CsQueryForm
 from db import *
+import io
+import csv
 
 app = Flask(__name__)
-
+app.config.from_object(Config)
 
 @app.route('/')
 def hello_world(name=None):
@@ -78,6 +82,41 @@ def subs():
     db_clinics = db.get_all_clinics(facility)
 
     return render_template('subs.html', db_data=db_data, db_products=db_products, db_pending=db_pending, db_clinics=db_clinics) #return variables from db_data (inventory) & db_products (specialty)
+
+@app.route('/csquery', methods=['GET','POST'])
+def csquery():
+    form = CsQueryForm()
+    #get visit types from the kv
+    db = DB()
+    db.get_conn()
+    db.get_cursor()
+    visit_types = db.get_visit_types()
+    form.visit_type.choices = [(rs['VisitTypeCode'], rs['VisitTypeCode']) for rs in visit_types]
+
+    if form.validate_on_submit():
+        try:
+            cs_data = db.get_cs_data(form.start_date, form.end_date, form.visit_type.data)
+
+            output = io.StringIO()
+            writer = csv.writer(output)
+
+            line = ['EncounterID, VisitType, VisitCode, ApptDate, ApptTime, MRN, PtName, PtDOB, PrimIns, PrimInsNo, SecIns, SecInsNo, ApptProvider, Facility']
+            writer.writerow(line)
+
+            for row in cs_data:
+                line = [row['EncounterID']+','+row['VisitType']+','+row['VisitCode']+','+str(row['ApptDate'])+','+str(row['ApptTime'])+','+row['MRN']+','+row['PtName']+','+str(row['PtDOB'])+','+row['PrimIns']+','+row['PrimInsNo']+','+row['SecIns']+','+row['SecInsNo']+','+row['ApptProvider']+','+row['Facility']]
+                writer.writerow(line)
+
+            output.seek(0)
+
+            return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=custom_schedule.csv"})
+        except Exception as e:
+            print(e)
+
+        return redirect('/csquery')
+
+    return render_template('CsQuery.html', title="CS Query", form=form)
+
 
 
 
