@@ -10,8 +10,85 @@
         {{ form.end_date(size=32) }}
     </p>
     <p>
-        {{ form.visit_type.label }}<br>
-        {{ form.visit_type }}
+        {{ form.visit_select.label }}<br>
+        {{ form.visit_select }}
     </p>
+
+    <div id="visit_type_p" style="display: none">
+        <p>
+            {{ form.visit_type.label }}<br>
+            {{ form.visit_type }}
+        </p>
+    </div>
+
+    <div id="visit_category_p" style="display: none">
+        <p>
+            {{ form.visit_category.label }}<br>
+            {{ form.visit_category }}
+        </p>
+    </div>
+    <p>
+        {{ form.appt_provider.label }}<br>
+        {{ form.appt_provider }} {{ form.appt_provider_all.label }} {{ form.appt_provider_all }}
+    </p>
+    <p>
+        {{ form.facility.label }}<br>
+        {{ form.facility }} {{ form.facility_all.label }} {{ form.facility_all }}
+    </p>
+    <p>
+        {{ form.visit_status_category.label }}<br>
+        {{ form.visit_status_category }}
+    </p>
+
     <p>{{ form.submit() }}</p>
 </form>
+
+<script>
+    function visitTypeSelection() {
+        let single_select = document.getElementById("visit_select-0");
+        let category_select = document.getElementById("visit_select-1");
+
+        if (single_select.checked) {
+            document.getElementById("visit_type_p").style.display = "inherit"
+            document.getElementById("visit_category_p").style.display = "none"
+        }
+
+        if (category_select.checked) {
+            document.getElementById("visit_type_p").style.display = "none"
+            document.getElementById("visit_category_p").style.display = "inherit"
+        }
+
+        /* if (radio_value == "Select Single Visit Type") {
+            document.getElementById("visit_type").style.display = "inline"
+            document.getElementById("visit_category").style.display = "none"
+        } else {
+            document.getElementById("visit_type").style.display = "none"
+            document.getElementById("visit_category").style.display = "inline"
+        } */
+    }
+
+    function providerAllChange() {
+        let provider_all = document.getElementById("appt_provider_all")
+
+        if (provider_all.checked) {
+            //hide the provider selection box
+            document.getElementById("appt_provider").style.display = "none"
+        } else {
+            //restore provider selection box
+            document.getElementById("appt_provider").style.display = "inherit"
+        }
+    }
+
+    function facilityAllChange() {
+        let facility_all = document.getElementById("facility_all")
+
+        if (facility_all.checked) {
+            //hide the facility selection box
+            document.getElementById("facility").style.display = "none"
+        } else {
+            //restore facility selection box
+            document.getElementById("facility").style.display = "inherit"
+        }
+    }
+
+</script>

@@ -93,14 +93,20 @@ def csquery():
     db.get_conn()
     db.get_cursor()
     visit_types = db.get_visit_types()
+    facilities = db.get_facilities()
+    providers = db.get_providers()
     form.visit_type.choices = [(rs['VisitTypeCode'], rs['VisitTypeCode']) for rs in visit_types]
+    form.appt_provider.choices = [(rs['provFullName'], rs['provFullName']) for rs in providers]
+    form.facility.choices = [(rs['FacilityName'], rs['FacilityName']) for rs in facilities]
 
     if form.validate_on_submit():
         try:
-            cs_data = db.get_cs_data(form.start_date, form.end_date, form.visit_type.data)
+            cs_data = db.get_cs_data(form.start_date, form.end_date, form.visit_type.data, form.visit_select.data,
+                                     form.visit_category.data, form.appt_provider_all, form.appt_provider,
+                                     form.facility_all, form.facility, form.visit_status_category.data)
 
             df_output = pd.DataFrame(cs_data, columns=['EncounterID', 'VisitType', 'VisitCode', 'ApptDate', 'ApptTime', 'MRN', 'PtName', 'PtDOB', 'PrimIns', 'PrimInsNo', 'SecIns', 'SecInsNo', 'ApptProvider', 'Facility'])
-            df_output['ApptTime'] = df_output['ApptTime'] + pd.Timestamp(0)
+            df_output['ApptTime'] = pd.Timestamp('today').normalize() + df_output['ApptTime']
 
             excel_file = io.BytesIO()
 
