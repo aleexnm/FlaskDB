@@ -1,0 +1,49 @@
+{% extends "index.html" %}
+
+{% block body %}
+
+      <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 style="padding-top: 50px; padding-bottom: 25px;">GSC Contracted Insurances</h1>
+                <table id="gscInsuranceTbl" class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Insurance Name</th>
+                            <th>Effective Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in insurance_list %}
+                            <tr>
+                                <td>
+                                     {{row.Insurance}}
+                                </td>
+                                <td>
+                                    {{row.effective_date}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+
+
+
+
+{% endblock %}
+<!-- container with info -->
+
+{% block scripts %}
+<!-- data table script -->
+<script>
+    $(document).ready(function() {
+        $('#gscInsuranceTbl').DataTable( {
+            "lengthMenu": [ 10, 20, 50, 75, 100 ],
+            "pageLength": 20
+        });
+    } );
+</script>
+{% endblock %}

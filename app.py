@@ -1,25 +1,32 @@
 # create flask app
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response
-from config import Config
+from config import AppConfig
 from forms import CsQueryForm
 from db import *
 import pandas as pd
 import io
-import csv
 
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(AppConfig)
 
 @app.route('/')
 def hello_world(name=None):
-    db = DB()
-    db.get_conn()
-    db.get_cursor()
-    db_data = db.get_all_data()
-    facility_list = db.get_facility_list()
-    return render_template('index.html', alex=db_data, facility_list=facility_list)
+    #db = DB()
+    #db.get_conn()
+    #db.get_cursor()
+    #db_data = db.get_all_data()
+    #facility_list = db.get_facility_list()
+    #print("FL: ", facility_list)
+    db = Database(AppConfig)
+    facility_list = db.run_query("SELECT ShortName, FacilityName FROM kvFacility WHERE status = 'Active' ORDER BY FacilityName")
+    return render_template('managerDashboardHome.html', facility_list=facility_list)
 
+@app.route('/gscinsurance')
+def gsc_insurance():
+    db = Database(AppConfig)
+    gsc_insurance_list = db.run_query("SELECT Insurance, DATE_FORMAT(kvIns.GSC_Effective_Date, '%m/%d/%Y') as effective_date FROM kvIns WHERE GSC_Credentialed ORDER BY Insurance")
+    return render_template('gscInsurance.html', insurance_list=gsc_insurance_list)
 
 @app.route('/product/<id>')
 def product(id):
@@ -138,29 +145,6 @@ def csquery():
     return render_template('CsQuery.html', title="CS Query", form=form)
 
 
-# TEST DICTIONARY
-# @app.route('/test')
-#def test():
-  #  db = DB()
-  #  db.get_conn()
-  #  db.get_cursor()
-    #facility = "West"
-  #  custom_schedule_dict = {
-   #     "West": "1- El Paso Pain Center - West",
-   #    "East": "1- El Paso Pain Center - East",
-   #     "Central": "1- El Paso Pain Center",
-   #     "Northeast": "1- El Paso Pain Center - Northeast",
-   #     "Alamogordo": "1- New Mexico Pain Center - Alamogordo ",
-   #     "Las Cruces - Northrise": "1- Las Cruces Pain Center",
-   #     "Rio": "1- New Mexico Pain Center - Rio",
-   #     "Roswell": "1- New Mexico Pain Center - Roswell",
-   #     "Frisco": "1- North Texas Pain Center - Frisco",
-   #     "Mid Cities": "1- North Texas Pain Center - Mid Cities"
-
-   # }
-    # print(custom_schedule_dict[facility])
-    # products = db.get_all_products('CHK', custom_schedule_dict[facility])
-    # return render_template('prod.html', products=products)
 
 if __name__ == '__main__':
     app.run(host="localhost", port=8888, debug=True)

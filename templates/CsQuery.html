@@ -1,5 +1,10 @@
-<h1>Custom Schedule Query</h1>
-<form action="" method="POST" novalidate>
+{% extends "index.html" %}
+
+
+{% block body %}
+
+<h1 style="padding-left: 25px">Custom Schedule Query</h1>
+<form style="padding-left: 50px" action="" method="POST" novalidate>
     {{ form.hidden_tag() }}
     <p>
         {{ form.start_date.label }}<br>
@@ -40,55 +45,62 @@
         {{ form.visit_status_category }}
     </p>
 
-    <p>{{ form.submit() }}</p>
+    <p> <input type="submit" class="btn btn-warning btn-block" value="Get Data"></p>
 </form>
 
-<script>
-    function visitTypeSelection() {
-        let single_select = document.getElementById("visit_select-0");
-        let category_select = document.getElementById("visit_select-1");
+{% endblock %}
 
-        if (single_select.checked) {
-            document.getElementById("visit_type_p").style.display = "inherit"
-            document.getElementById("visit_category_p").style.display = "none"
+{% block scripts %}
+    <script>
+
+
+        function visitTypeSelection() {
+            let single_select = document.getElementById("visit_select-0");
+            let category_select = document.getElementById("visit_select-1");
+
+            if (single_select.checked) {
+                document.getElementById("visit_type_p").style.display = "inherit"
+                document.getElementById("visit_category_p").style.display = "none"
+            }
+
+            if (category_select.checked) {
+                document.getElementById("visit_type_p").style.display = "none"
+                document.getElementById("visit_category_p").style.display = "inherit"
+            }
+
+            /* if (radio_value == "Select Single Visit Type") {
+                document.getElementById("visit_type").style.display = "inline"
+                document.getElementById("visit_category").style.display = "none"
+            } else {
+                document.getElementById("visit_type").style.display = "none"
+                document.getElementById("visit_category").style.display = "inline"
+            } */
         }
 
-        if (category_select.checked) {
-            document.getElementById("visit_type_p").style.display = "none"
-            document.getElementById("visit_category_p").style.display = "inherit"
+        function providerAllChange() {
+            let provider_all = document.getElementById("appt_provider_all")
+
+            if (provider_all.checked) {
+                //hide the provider selection box
+                document.getElementById("appt_provider").style.display = "none"
+            } else {
+                //restore provider selection box
+                document.getElementById("appt_provider").style.display = "inherit"
+            }
         }
 
-        /* if (radio_value == "Select Single Visit Type") {
-            document.getElementById("visit_type").style.display = "inline"
-            document.getElementById("visit_category").style.display = "none"
-        } else {
-            document.getElementById("visit_type").style.display = "none"
-            document.getElementById("visit_category").style.display = "inline"
-        } */
-    }
+        function facilityAllChange() {
+            let facility_all = document.getElementById("facility_all")
 
-    function providerAllChange() {
-        let provider_all = document.getElementById("appt_provider_all")
-
-        if (provider_all.checked) {
-            //hide the provider selection box
-            document.getElementById("appt_provider").style.display = "none"
-        } else {
-            //restore provider selection box
-            document.getElementById("appt_provider").style.display = "inherit"
+            if (facility_all.checked) {
+                //hide the facility selection box
+                document.getElementById("facility").style.display = "none"
+            } else {
+                //restore facility selection box
+                document.getElementById("facility").style.display = "inherit"
+            }
         }
-    }
 
-    function facilityAllChange() {
-        let facility_all = document.getElementById("facility_all")
+    </script>
+{% endblock %}
 
-        if (facility_all.checked) {
-            //hide the facility selection box
-            document.getElementById("facility").style.display = "none"
-        } else {
-            //restore facility selection box
-            document.getElementById("facility").style.display = "inherit"
-        }
-    }
-
-</script>

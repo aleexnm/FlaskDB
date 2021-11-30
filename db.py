@@ -1,7 +1,59 @@
 # python mysql db
-
+import sys
 import pymysql
-import datetime
+from loguru import logger
+
+
+class Database:
+    """Database Connection Class"""
+
+    def __init__(self, config):
+        self.host = config.db_host
+        self.username = config.db_user
+        self.password = config.db_password
+        self.dbname = config.db_name
+        self.conn = None
+
+    def open_connection(self):
+        """Connect to MySQL Database."""
+        try:
+            if self.conn is None:
+                self.conn = pymysql.connect(
+                    host=self.host,
+                    user=self.username,
+                    passwd=self.password,
+                    db=self.dbname,
+                    connect_timeout=5
+                )
+        except pymysql.MySQLError as e:
+            logger.error(e)
+            sys.exit()
+        finally:
+            logger.info('Connection opened successfully.')
+
+    def run_query(self, query):
+        """Execute SQL query."""
+        try:
+            self.open_connection()
+            with self.conn.cursor(pymysql.cursors.DictCursor) as cur:
+                if 'SELECT' in query:
+                    cur.execute(query)
+                    result = cur.fetchall()
+                    cur.close()
+                    return result
+                result = cur.execute(query)
+                self.conn.commit()
+                affected = f"{cur.rowcount} rows affected."
+                cur.close()
+                return affected
+        except pymysql.MySQLError as e:
+            logger.error(e)
+            sys.exit()
+        finally:
+            if self.conn:
+                self.conn.close()
+                self.conn = None
+                logger.info('Database connection closed.')
 
 class DB:
     __conn: pymysql
@@ -134,9 +186,9 @@ class DB:
                     else:
                         include_status = "No"
 
-                    sql_string = ("SELECT * FROM CustomScheduleAll INNER JOIN kvVisitTypeCode "
+                    sql_string = ("SELECT * FROM CustomScheduleAll LEFT JOIN kvVisitTypeCode "
                                   "ON kvVisitTypeCode.VisitTypeCode = CustomScheduleAll.VisitType "
-                                  "INNER JOIN kvVisitStatusCode ON kvVisitStatusCode.VisitStatus = CustomScheduleAll.VisitCode "
+                                  "LEFT JOIN kvVisitStatusCode ON kvVisitStatusCode.VisitStatus = CustomScheduleAll.VisitCode "
                                   "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' AND kvVisitStatusCode.VisitCountInclude = '{}' {} ORDER BY ApptDate, ApptTime") \
                                 .format(start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), include_status, category_filter)
 

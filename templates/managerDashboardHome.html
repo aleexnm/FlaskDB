@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{% block body %}
+<!-- container -->
+  <div class="container">
+           <div class="text-center">
+               <img src="./static/img/Logo-Blue_tp.png" style="padding-top: 52px;" alt="EPMED PA Logo">
+           </div>
+
+           <div class="row">
+            <div class="col-md-12">
+              <h1 class="display-4" align="center" style=" padding-top: 50px; padding-bottom: 25px;">Manager's Dashboard</h1>
+
+               <form action="/subs" method="post">
+                   <label for="facility" class="fw-bold" style="padding-bottom: 15px;">Select Facility</label>
+                    <select name="facility" id="facility" class="form-select" aria-label="Default select example">
+
+                        {% for facility in facility_list %}
+                            <option value="{{ facility.ShortName }}">{{ facility.ShortName }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                   <button id="managerBtn" class="btn btn-dark btn-lg" align="center">Select</button>
+               </form>
+           </div>
+        </div>
+    </div>
+{% endblock %}
