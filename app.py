@@ -119,7 +119,7 @@ def csquery():
             options = {}
             options['strings_to_formulas'] = False
             options['strings_to_urls'] = False
-            xlwriter = pd.ExcelWriter(excel_file, engine='xlsxwriter',options=options, date_format='mm/dd/yyyy', datetime_format='hh:mm AM/PM')
+            xlwriter = pd.ExcelWriter(excel_file, engine='xlsxwriter',engine_kwargs={'options': options}, date_format='mm/dd/yyyy', datetime_format='hh:mm AM/PM')
 
             df_output.to_excel(xlwriter, sheet_name='Sheet1', index=False, na_rep='NaN')
 
@@ -130,7 +130,7 @@ def csquery():
 
 
             xlwriter.save()
-            xlwriter.close()
+            #xlwriter.close()
 
             excel_file.seek (0)
             response = Response(excel_file.read(), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',headers={"Content-Disposition":"attachment;filename=custom_schedule.xlsx"})
