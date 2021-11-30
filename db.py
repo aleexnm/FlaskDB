@@ -126,6 +126,7 @@ class DB:
         else:
             facility_filter = " AND Facility = '" + facility.data + "'"
 
+
         if visit_type_selection == "Select Single Visit Type": # Single visit type, include in query
 
             if visit_status_category == "All": # Do not need to join visit status table
@@ -171,11 +172,10 @@ class DB:
                     category_filter = "AND kvVisitTypeCode.EncWoClaimsTgtGroup = '{}'".format(visit_category)
 
                 if visit_status_category == "All": #No need to join visit status table
-
                     sql_string = ("SELECT * FROM CustomScheduleAll INNER JOIN kvVisitTypeCode "
                                   "ON kvVisitTypeCode.VisitTypeCode = CustomScheduleAll.VisitType "
-                                  "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' {} ORDER BY ApptDate, ApptTime")\
-                                .format(start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), category_filter)
+                                  "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' {} {} {} ORDER BY ApptDate, ApptTime")\
+                                .format(start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), category_filter, provider_filter, facility_filter)
                 else: # Need to join visit status table
                     if visit_status_category == "Seen/Scheduled":
                         include_status = "Yes"
@@ -185,9 +185,8 @@ class DB:
                     sql_string = ("SELECT * FROM CustomScheduleAll LEFT JOIN kvVisitTypeCode "
                                   "ON kvVisitTypeCode.VisitTypeCode = CustomScheduleAll.VisitType "
                                   "LEFT JOIN kvVisitStatusCode ON kvVisitStatusCode.VisitStatus = CustomScheduleAll.VisitCode "
-                                  "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' AND kvVisitStatusCode.VisitCountInclude = '{}' {} ORDER BY ApptDate, ApptTime") \
-                                .format(start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), include_status, category_filter)
-
+                                  "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' AND kvVisitStatusCode.VisitCountInclude = '{}' {} {} {}} ORDER BY ApptDate, ApptTime") \
+                                .format(start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), include_status, category_filter, provider_filter, facility_filter)
 
             self.__cursor.execute(sql_string)
             return self.__cursor.fetchall()
