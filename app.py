@@ -6,7 +6,6 @@ from db import *
 import pandas as pd
 import io
 
-
 app = Flask(__name__)
 app.config.from_object(AppConfig)
 
@@ -147,4 +146,4 @@ def csquery():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host="localhost", debug=True)
