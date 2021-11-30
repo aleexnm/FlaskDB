@@ -1,8 +1,6 @@
 # python mysql db
 import sys
 import pymysql
-from loguru import logger
-
 
 class Database:
     """Database Connection Class"""
@@ -26,10 +24,9 @@ class Database:
                     connect_timeout=5
                 )
         except pymysql.MySQLError as e:
-            logger.error(e)
             sys.exit()
         finally:
-            logger.info('Connection opened successfully.')
+            return None
 
     def run_query(self, query):
         """Execute SQL query."""
@@ -53,7 +50,6 @@ class Database:
             if self.conn:
                 self.conn.close()
                 self.conn = None
-                logger.info('Database connection closed.')
 
 class DB:
     __conn: pymysql
