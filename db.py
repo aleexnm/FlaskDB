@@ -185,7 +185,7 @@ class DB:
                     sql_string = ("SELECT * FROM CustomScheduleAll LEFT JOIN kvVisitTypeCode "
                                   "ON kvVisitTypeCode.VisitTypeCode = CustomScheduleAll.VisitType "
                                   "LEFT JOIN kvVisitStatusCode ON kvVisitStatusCode.VisitStatus = CustomScheduleAll.VisitCode "
-                                  "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' AND kvVisitStatusCode.VisitCountInclude = '{}' {} {} {}} ORDER BY ApptDate, ApptTime") \
+                                  "WHERE CustomScheduleAll.ApptDate >= '{}' AND CustomScheduleAll.ApptDate <= '{}' AND kvVisitStatusCode.VisitCountInclude = '{}' {} {} {} ORDER BY ApptDate, ApptTime") \
                                 .format(start_date.data.strftime("%Y-%m-%d"), end_date.data.strftime("%Y-%m-%d"), include_status, category_filter, provider_filter, facility_filter)
 
             self.__cursor.execute(sql_string)
